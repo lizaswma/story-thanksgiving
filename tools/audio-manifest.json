@@ -1,0 +1,26 @@
+{
+  "_comment": "Narration lines mirrored from src/book.ts (TITLE_CARD + PAGES[].text/.secondaryText, combined into one clip per page) and the count words for the leaf count (PRD §4.1/§5). Keep this in sync by hand if book.ts changes — it's a thin data copy, not the source of truth.",
+  "narration": [
+    { "id": "00", "zh": "小兔过感恩节", "en": "Little Rabbit's Thanksgiving" },
+    { "id": "01", "zh": "感恩节到了！", "en": "It's Thanksgiving!" },
+    { "id": "02", "zh": "妈妈拿来一篮树叶。说声谢谢，贴片叶子。", "en": "Mama brings a basket of leaves. Say thank you, add a leaf." },
+    { "id": "03", "zh": "谢谢妈妈给我读书！红叶子，一片！", "en": "Thank you, Mama, for reading to me! A red leaf. One!" },
+    { "id": "04", "zh": "谢谢爸爸陪我骑车！橙叶子，两片！", "en": "Thank you, Baba, for biking with me! An orange leaf. Two!" },
+    { "id": "05", "zh": "谢谢婆婆做好吃的！黄叶子，三片！", "en": "Thank you, Grandma, for yummy food! A yellow leaf. Three!" },
+    { "id": "06", "zh": "谢谢公公陪我种花！绿叶子，四片！", "en": "Thank you, Grandpa, for gardening with me! A green leaf. Four!" },
+    { "id": "07", "zh": "叮咚！小猫来了！", "en": "Ding-dong! Mr. Cat is here!" },
+    { "id": "08", "zh": "谢谢小猫做我朋友！棕叶子，五片！", "en": "Thank you, Mr. Cat, for being my friend! A brown leaf. Five!" },
+    { "id": "09", "zh": "大家说：谢谢小兔！金叶子，六片！", "en": "Everyone says: Thank you, Little Rabbit! A golden leaf. Six!" },
+    { "id": "10", "zh": "数一数树叶。", "en": "Let's count the leaves." },
+    { "id": "11", "zh": "一家人吃大餐！", "en": "Time for the big dinner!" },
+    { "id": "12", "zh": "感恩节快乐，晚安！", "en": "Happy Thanksgiving. Good night!" }
+  ],
+  "count": [
+    { "id": "1", "zh": "一", "en": "one" },
+    { "id": "2", "zh": "二", "en": "two" },
+    { "id": "3", "zh": "三", "en": "three" },
+    { "id": "4", "zh": "四", "en": "four" },
+    { "id": "5", "zh": "五", "en": "five" },
+    { "id": "6", "zh": "六", "en": "six" }
+  ]
+}

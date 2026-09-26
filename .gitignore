@@ -1,0 +1,10 @@
+node_modules
+dist
+dev-dist
+*.local
+.DS_Store
+.vite
+.env
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts

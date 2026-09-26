@@ -1,0 +1,854 @@
+:root {
+  /* Warm palette — little-rabbit-style/palette/palette.json v1.0, plus this
+     book's Thanksgiving accent (the scarf/pumpkin orange). */
+  --paper: #fdf3e8;
+  --fur: #f9e7d2;
+  --ink: #4a3a2e; /* on-page sentence text (palette: textInk) */
+  --outline: #593a2e; /* character/illustration outline brown */
+  --blush: #fcb0ab;
+  --pumpkin: #ee9c53;
+  --lamp: #f6c87a;
+  --dusk: #2e3a5c;
+
+  --bg: #eee0c4; /* surround behind the stage */
+  --stage-bg: var(--paper);
+  --ink-soft: #7a6552;
+  --accent: var(--pumpkin);
+  --accent-2: var(--lamp);
+  --banner-bg: rgba(253, 243, 232, 0.88);
+  --control-bg: rgba(253, 243, 232, 0.82);
+  --font: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC",
+    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Match the generated art (Nano Banana Pro → 16:9). */
+  --stage-w: 1280;
+  --stage-h: 720;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #2a2333;
+  }
+}
+
+/* ── Stage ─────────────────────────────────────────────────────────────── */
+.stage {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100dvh; /* track the *visible* height as mobile Safari's toolbar moves */
+  display: grid;
+  place-items: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background: radial-gradient(circle at 50% 30%, #f3e8d6, #e4d2b6 75%);
+}
+
+.stage-inner {
+  /* Height actually available once the toolbar and safe-area notches are gone.
+     Sizing against 100vh let the 16:9 stage grow taller than the screen on a
+     landscape phone, pushing the banner + top controls off-screen. */
+  --avail-h: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  position: relative;
+  width: min(100vw, calc(var(--avail-h) * (var(--stage-w) / var(--stage-h))));
+  aspect-ratio: var(--stage-w) / var(--stage-h);
+  max-height: var(--avail-h);
+  overflow: hidden;
+  background: var(--stage-bg);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 820px) {
+  .stage-inner {
+    border-radius: 0;
+  }
+}
+
+/* ── Pages & layers ────────────────────────────────────────────────────── */
+.page {
+  position: absolute;
+  inset: 0;
+  animation: page-in 240ms ease;
+}
+
+/* Fade only — a translate here gets clipped by the stage's overflow during the
+   turn, which reads as the text being cut off mid-swipe. */
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+/* `hidden` must beat the `display: grid` above. */
+.layer[hidden] {
+  display: none;
+}
+
+.layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-user-drag: none;
+}
+
+.layer.background {
+  z-index: 0;
+}
+
+.layer-placeholder {
+  padding: 0.35em 0.7em;
+  border: 2px dashed rgba(89, 58, 46, 0.4);
+  border-radius: 10px;
+  font-size: clamp(11px, 1.6vw, 15px);
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  background: rgba(89, 58, 46, 0.06);
+}
+
+.layer.background .layer-placeholder {
+  align-self: start;
+  margin-top: 12px;
+  border-style: solid;
+}
+
+/* interaction animations */
+.is-glowing {
+  animation: glow 1.4s ease-in-out infinite alternate;
+}
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 0 rgba(255, 210, 120, 0));
+  }
+  to {
+    filter: drop-shadow(0 0 26px rgba(255, 210, 120, 0.9));
+  }
+}
+
+/* Whole-scene warm pulse — the lantern lights up (page 3). The art is drawn
+   lit at rest, so this has to be strong to read: a quick bright pop on the
+   first tap, then a clearly visible breathing glow centred on the lantern.
+   Every tap also fires `.glow-burst` (below). */
+.page.is-glowing {
+  animation:
+    page-glow-pop 700ms ease-out,
+    page-glow 1.6s ease-in-out 700ms infinite alternate;
+}
+.page.is-glowing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 45% 45%,
+    rgba(255, 220, 140, 0.7),
+    rgba(255, 200, 110, 0.25) 38%,
+    rgba(255, 200, 110, 0) 68%
+  );
+  mix-blend-mode: screen;
+  animation: page-glow-veil 1.6s ease-in-out infinite alternate;
+}
+@keyframes page-glow-pop {
+  0% { filter: brightness(1) saturate(1); }
+  30% { filter: brightness(1.45) saturate(1.4); }
+  100% { filter: brightness(1.05) saturate(1.1); }
+}
+@keyframes page-glow {
+  from { filter: brightness(1.05) saturate(1.1); }
+  to { filter: brightness(1.22) saturate(1.3); }
+}
+@keyframes page-glow-veil {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+}
+
+/* Per-tap burst for `glow` pages: an expanding bloom + stars flying out from
+   the hotspot's centre. Above the extras' hotspots' sparks (z 9) so it always
+   shows; never intercepts taps. */
+.glow-burst {
+  position: absolute;
+  z-index: 9;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.glow-burst::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 60vmin;
+  height: 60vmin;
+  margin: -30vmin 0 0 -30vmin;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 235, 0.95),
+    rgba(255, 214, 120, 0.6) 35%,
+    rgba(255, 214, 120, 0) 70%
+  );
+  animation: glow-bloom 900ms ease-out forwards;
+}
+.glow-star {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: clamp(30px, 8vmin, 64px);
+  line-height: 1;
+  color: #ffe9a3;
+  text-shadow: 0 0 10px rgba(255, 200, 90, 0.95);
+  opacity: 0;
+  animation: glow-star-fly 1000ms ease-out forwards;
+}
+@keyframes glow-bloom {
+  0% { transform: scale(0.2); opacity: 0; }
+  25% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+@keyframes glow-star-fly {
+  0% {
+    transform: translate(-50%, -50%) rotate(var(--a)) translateY(0) scale(0.3);
+    opacity: 0;
+  }
+  20% { opacity: 1; }
+  100% {
+    transform: translate(-50%, -50%) rotate(var(--a)) translateY(calc(-1 * var(--d))) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.is-twinkling {
+  animation: twinkle 1s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Reveal layers (door opens, costume lifts, lamp off…) cross-fade over the
+   background rather than hard-cutting. */
+.layer.swap-to {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+.layer.swap-to:not([hidden]) {
+  opacity: 1;
+}
+.layer.swap-to[hidden] {
+  display: grid;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Easter eggs: full-frame "reacted" variants (PRD §6 "no dead taps") ── */
+/* Below `.swap-to`/`.given` (z-index 2): every extra's flash is an edit of
+   the page's PRE-interaction resting background, generated with no
+   knowledge of the swapped/given state. It used to sit at z-index 3, above
+   `.swap-to` — so tapping an extra after the main interaction had already
+   fired (door opened, leaf added, lamp off…) painted the old
+   "before" state right over the new one, e.g. 妈妈/爸爸 vanishing behind a
+   closed door on page 9 when the moon easter egg was tapped. Below it, an
+   extra tap after the interaction still plays its sfx (not silent) but the
+   already-correct art stays on top instead of being covered by a stale
+   flash — see also `.layer-puppet`, which needs the opposite fix (always
+   above extras) for the same underlying reason. */
+.layer.extra-flash {
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+.layer.extra-flash:not([hidden]) {
+  opacity: 1;
+}
+/* keep the cross-fade: don't let [hidden] hard-cut it */
+.layer.extra-flash[hidden] {
+  display: grid;
+  opacity: 0;
+  pointer-events: none;
+}
+.layer.extra-flash .layer-placeholder {
+  display: none;
+}
+
+/* Opt-in per extra (PRD §6.1 "no dead taps" wins over staying below `.swap-to`)
+   — for an extra whose page doesn't hide anything story-critical when its
+   flash briefly reverts the frame. See `ExtraTap.aboveReveal` in types.ts for which extras opt in
+   and why. */
+.layer.extra-flash.above-reveal {
+  z-index: 3;
+}
+
+/* ── Tap spark (always-visible "yes, that worked" for extras) ────────────
+   Confined to the extra's own hotspot rect (unlike `.extra-flash`, which
+   some pages must keep hidden below an already-revealed layer — see
+   PageView's comment above where this renders), so it's safe to show on
+   every tap regardless of order or what the main interaction has done. */
+.tap-spark {
+  position: absolute;
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.tap-spark[hidden] {
+  display: none;
+}
+.tap-spark::after {
+  content: "";
+  width: 44%;
+  height: 44%;
+  min-width: 34px;
+  min-height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 214, 140, 0.6) 55%,
+    rgba(255, 214, 140, 0) 76%
+  );
+  animation: tap-spark-pop 480ms ease-out forwards;
+}
+@keyframes tap-spark-pop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  35% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+/* ── Hotspot (the one big tap target) ──────────────────────────────────── */
+.hotspot {
+  position: absolute;
+  z-index: 5;
+  min-width: 120px;
+  min-height: 120px;
+  border: 0;
+  background: transparent;
+  border-radius: 24px;
+  cursor: pointer;
+}
+.hotspot:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+/* Secondary "bonus" targets: sized exactly to the art element (no 120px floor —
+   that's for the one primary interaction), above the main hotspot + text banner.
+   `.hotspot.extra-hotspot` so it wins regardless of source order. */
+.hotspot.extra-hotspot {
+  z-index: 8;
+  min-width: 0;
+  min-height: 0;
+}
+.hotspot.extra-hotspot:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Sticker bag ──────────────────────────────────────────────────────────
+   PLACEHOLDER: on tap, ★ tokens accumulate near 小兔's trick-or-treat bag
+   (treat pages) or numerals appear over the sticker row (counting page). The
+   real art — the 6 keyed sticker sprites flying onto the bag — is still to do. */
+.sticker-bag {
+  position: absolute;
+  z-index: 7;
+  left: 45%;
+  bottom: 20%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  max-width: 26%;
+}
+.sticker {
+  position: relative;
+  display: block;
+  width: clamp(32px, 4.6vw, 50px);
+  height: clamp(32px, 4.6vw, 50px);
+  animation: pop 300ms cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.sticker img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 16%;
+  filter: drop-shadow(0 2px 3px rgba(74, 45, 30, 0.35));
+}
+
+/* Counting page: numerals that pop over the sticker row drawn in the plate. */
+.count-row {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  bottom: 13%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: clamp(8px, 3.4vw, 40px);
+  justify-content: center;
+}
+.count-num {
+  display: grid;
+  place-items: center;
+  width: clamp(30px, 4.5vw, 46px);
+  height: clamp(30px, 4.5vw, 46px);
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  border: 3px solid var(--paper);
+  font: 800 clamp(15px, 2.4vw, 24px) var(--font);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  animation: pop 300ms cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+@keyframes pop {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ── Thank badge (thank-you pages) ────────────────────────────────────────
+   One numeral per page: the tree's running total after this page's leaf. */
+.thank-badge {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  bottom: 16%;
+  transform: translateX(-50%);
+}
+
+/* ── Thankful tree (PRD §5, §9.4) ─────────────────────────────────────────
+   Leaves composited over the plate in stage %, above the reaction layer
+   (.swap-to, z 2) and the extras' flashes, below the tap targets. Until the
+   leaf sprites exist, each leaf is a flat leaf shape in its placeholder color. */
+.thankful-tree {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.leaf {
+  position: absolute; /* width is set inline, relative to the tree */
+  aspect-ratio: 1;
+  /* `translate`, not `transform`: the shared `pop` keyframes animate transform. */
+  translate: -50% -50%;
+  animation: pop 300ms cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.leaf img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.leaf-shape {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--leaf);
+  border: 3px solid var(--outline);
+  border-radius: 0 70% 0 70%;
+  transform: rotate(-45deg) scale(0.75);
+}
+/* A thank-you leaf arcs from 小兔's paws (or the family, page 9) up to its slot. */
+.leaf.is-flying {
+  animation: leaf-fly 900ms cubic-bezier(0.35, 0, 0.3, 1) both;
+}
+/* left/top (not transform) so the path is in stage %, whatever the leaf size. */
+@keyframes leaf-fly {
+  0% {
+    left: var(--sx);
+    top: var(--sy);
+    scale: 1.3;
+    rotate: 0deg;
+  }
+  50% {
+    left: var(--mx);
+    top: var(--my);
+    scale: 1.15;
+    rotate: -20deg;
+  }
+  100% {
+    left: var(--tx);
+    top: var(--ty);
+    scale: 1;
+    rotate: 0deg;
+  }
+}
+/* Counting page: each counted leaf lights up. */
+.leaf.is-counted {
+  filter: drop-shadow(0 0 10px rgba(255, 236, 170, 0.95));
+}
+/* Sits just under its leaf, so it never covers the leaf being counted. */
+.count-num.leaf-num {
+  position: absolute;
+  left: 50%;
+  top: 82%;
+  translate: -50% 0;
+}
+/* Bedtime: the tree glows softly once the lamp is off. */
+.thankful-tree.is-glowing .leaf {
+  filter: drop-shadow(0 0 12px rgba(255, 226, 150, 0.9));
+  animation: twinkle 2.4s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .leaf.is-flying {
+    animation: fade-in 400ms ease both;
+  }
+  .thankful-tree.is-glowing .leaf {
+    animation: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Text banner (parent-facing sentence) ─────────────────────────────────
+   No solid card — just the ▶ chip + a shadowed caption, so it sits lightly
+   over the art. It auto-fades a few seconds after each page turn (`.is-dim`);
+   tapping it wakes it and replays the narration. */
+.text-banner {
+  position: absolute;
+  z-index: 6;
+  left: calc(env(safe-area-inset-left) + clamp(12px, 4%, 44px));
+  bottom: calc(env(safe-area-inset-bottom) + clamp(10px, 3.5%, 26px));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 18px);
+  max-width: min(80%, 760px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-family: var(--font);
+  text-align: left;
+  cursor: pointer;
+}
+/* Dim only the words when idle — keep the ▶ findable. */
+.text-banner .banner-text {
+  transition: opacity 500ms ease;
+}
+.text-banner.is-dim .banner-text {
+  opacity: 0.12;
+}
+.text-banner .replay-icon {
+  transition: opacity 500ms ease;
+}
+.text-banner.is-dim .replay-icon {
+  opacity: 0.5;
+}
+/* When faded, the banner must not intercept taps meant for the scene (e.g. a
+   low easter egg). Only the ▶ chip stays tappable — enough to wake it. */
+.text-banner.is-dim {
+  pointer-events: none;
+}
+.text-banner.is-dim .replay-icon {
+  pointer-events: auto;
+}
+
+.text-banner .replay-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: clamp(40px, 6vw, 54px);
+  height: clamp(40px, 6vw, 54px);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: clamp(15px, 2.2vw, 21px);
+  padding-left: 2px;
+  box-shadow: 0 3px 0 rgba(120, 70, 30, 0.45),
+    0 3px 12px rgba(0, 0, 0, 0.35);
+}
+.text-banner:active .replay-icon {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(120, 70, 30, 0.45), 0 1px 6px rgba(0, 0, 0, 0.35);
+}
+
+.text-banner .banner-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
+  /* legible over any art without a plate behind it */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6), 0 0 16px rgba(0, 0, 0, 0.45);
+}
+.text-banner .sentence {
+  font-size: clamp(17px, min(3.4vw, 5.6vh), 34px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+.text-banner .chant {
+  font-size: clamp(13px, min(2.3vw, 3.6vh), 22px);
+  color: #ffd9a8;
+  font-weight: 700;
+}
+/* ── Title card ───────────────────────────────────────────────────────────
+   Illustrated card: 小兔 sits low-right over an open dusk sky; the title text
+   rides the open upper-left sky. Light text with a soft dark halo for contrast. */
+.title-card {
+  background: #2e3a5c;
+}
+.title-card .layer-placeholder {
+  display: none;
+}
+.title-card .title-content {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.55em;
+  text-align: center;
+  padding: clamp(28px, 8%, 76px) 6% 5%;
+  color: #fff7ec;
+}
+.title-card .series {
+  margin: 0;
+  font-size: clamp(13px, 2.2vw, 20px);
+  letter-spacing: 0.3em;
+  color: #ffd9a8;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(20, 24, 44, 0.7);
+}
+.title-card .title {
+  margin: 0;
+  font-size: clamp(32px, 6.6vw, 66px);
+  font-weight: 800;
+  color: #fff7ec;
+  text-shadow: 0 2px 12px rgba(20, 24, 44, 0.8), 0 0 3px rgba(20, 24, 44, 0.6);
+}
+.start-button {
+  margin-top: 0.6em;
+  padding: 0.55em 2em;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #2a1400;
+  font: 700 clamp(18px, 3vw, 28px) var(--font);
+  cursor: pointer;
+  box-shadow: 0 6px 0 #b5641f;
+}
+.start-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #b5641f;
+}
+
+/* ── Top controls ─────────────────────────────────────────────────────── */
+.top-controls {
+  position: absolute;
+  z-index: 10;
+  top: calc(env(safe-area-inset-top) + 10px);
+  right: calc(env(safe-area-inset-right) + 12px);
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.parent-menu {
+  position: relative;
+}
+.parent-menu .gear {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--control-bg);
+  color: var(--ink-soft);
+  font-size: 20px;
+  cursor: pointer;
+}
+.menu-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+}
+.menu-panel {
+  position: absolute;
+  z-index: 21;
+  top: 48px;
+  right: 0;
+  width: 260px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(89, 58, 46, 0.18);
+  box-shadow: 0 20px 50px rgba(74, 45, 30, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.menu-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ink);
+}
+.segmented {
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(89, 58, 46, 0.25);
+}
+.segmented button {
+  padding: 7px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font: 600 13px var(--font);
+  cursor: pointer;
+}
+.segmented button.on {
+  background: var(--accent);
+  color: #fff;
+}
+.segmented.single {
+  padding: 0;
+}
+.menu-action,
+.menu-close {
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  font: 600 14px var(--font);
+  cursor: pointer;
+}
+.menu-action {
+  background: var(--accent);
+  color: #fff;
+}
+.menu-close {
+  background: rgba(89, 58, 46, 0.1);
+  color: var(--ink);
+}
+
+/* ── Nav arrows ───────────────────────────────────────────────────────── */
+/* Vertically centred on the side edges so they never overlap the text banner. */
+.nav-arrow {
+  position: absolute;
+  z-index: 8;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(44px, 6vw, 62px);
+  height: clamp(44px, 6vw, 62px);
+  border: 0;
+  border-radius: 50%;
+  background: var(--control-bg);
+  color: var(--ink);
+  font-size: clamp(24px, 3.6vw, 36px);
+  line-height: 1;
+  cursor: pointer;
+}
+.nav-prev {
+  left: 1.5%;
+}
+.nav-next {
+  right: 1.5%;
+}
+.nav-arrow:active {
+  transform: translateY(-50%) scale(0.94);
+}
+
+/* ── Progress dots ────────────────────────────────────────────────────── */
+.progress-dots {
+  position: absolute;
+  z-index: 7;
+  top: calc(env(safe-area-inset-top) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+}
+.progress-dots .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+.progress-dots .dot.done {
+  background: rgba(255, 255, 255, 0.5);
+}
+.progress-dots .dot.current {
+  background: var(--accent);
+  transform: scale(1.4);
+}
+
+/* ── Rotate hint (portrait phones) ────────────────────────────────────── */
+.rotate-hint {
+  display: none;
+}
+@media (max-width: 900px) and (orientation: portrait) {
+  .stage-inner {
+    display: none;
+  }
+  .rotate-hint {
+    display: block;
+    padding: 1em 1.4em;
+    font-size: 18px;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
