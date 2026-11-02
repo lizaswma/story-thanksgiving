@@ -25,12 +25,11 @@ OUT = Path(__file__).resolve().parent.parent / "public" / "sfx"
 SR = 44100
 PEAK = 0.35  # hard cap, ≈ -9 dBFS
 RMS = 0.10  # target average level of the audible part, ≈ -20 dBFS
-# Per-sound RMS multipliers; anything not listed is 1.0. The dragon dance is the
-# book's showpiece, so it's allowed to be a little bigger (still peak-capped).
-BOOST = {"drum": 1.3}
+# Per-sound RMS multipliers; anything not listed is 1.0.
+BOOST = {}
 MAX_DUR = 1.5  # seconds — the public/sfx/README.md bar
 
-SEED = 1015  # Mid-Autumn, 15th of the 8th lunar month
+SEED = 1015  # carried over from book 2, so the shared sounds stay byte-identical
 rng = np.random.default_rng(SEED)  # reseeded per sound in main(), see there
 
 
@@ -149,23 +148,11 @@ def note(name):
 
 
 # ---- the sounds -----------------------------------------------------------
-def s_chime():
-    """p1 (+ moon extras): a soft two-note glockenspiel 'ting-ting', rising."""
+def s_wind_chime():
+    """p1, window-leaves extras: a soft two-note glockenspiel 'ting-ting', rising."""
     y = silence(1.3)
     y = place(y, bell(note("G5"), 1.1, 0.30), 0.0)
     y = place(y, bell(note("D6"), 1.1, 0.34) * 0.85, 0.13)
-    return y
-
-
-def s_hush():
-    """p1 extra: a breath of night air — a slow band-limited noise swell."""
-    n = noise(1.0)
-    y = fft_filter(n, 500, 2600, soft=1.0)
-    y *= env_swell(len(y), 0.35, 0.5)
-    # a faint, distant cricket pair so it reads as 'night', not just wind
-    for at in (0.3, 0.42):
-        blip = tone(4300, 0.05) * env_swell(int(0.05 * SR), 0.01, 0.03)
-        y = place(y, blip * 0.05, at)
     return y
 
 
@@ -180,107 +167,8 @@ def s_rustle():
     return y * env_swell(len(y), 0.05, 0.25)
 
 
-def s_tap():
-    """p2 stool: two soft wooden knocks."""
-    def knock(f):
-        t = t_axis(0.16)
-        body = np.sin(2 * np.pi * (f + 60 * np.exp(-t * 60)) * t) * np.exp(-t * 28)
-        click = fft_filter(noise(0.16), 900, 3500) * np.exp(-t * 90) * 0.35
-        return body + click
-
-    y = silence(0.4)
-    y = place(y, knock(230), 0.0)
-    y = place(y, knock(200) * 0.75, 0.16)
-    return y
-
-
-def s_sparkle():
-    """p3 lantern lights: a quick upward shimmer of tiny high pings."""
-    y = silence(1.2)
-    scale = [note(n) for n in ("C6", "D6", "E6", "G6", "A6", "C7", "D7", "E7")]
-    for i, at in enumerate(np.linspace(0.0, 0.5, 12)):
-        f = scale[min(int(i * len(scale) / 12 + rng.integers(0, 2)), len(scale) - 1)]
-        d = 0.35
-        t = t_axis(d)
-        ping = np.sin(2 * np.pi * f * t) * np.exp(-t * 11) * env_ad(len(t), 0.002, 1.0)
-        y = place(y, ping * rng.uniform(0.4, 0.9), at)
-    return y
-
-
-def s_slice():
-    """p4 cut: a quick blade swish, then a small two-note 'ta-da'."""
-    n = noise(0.16)
-    swish = svf_bandpass(n, np.linspace(1200, 5200, len(n)), q=1.6) * env_swell(len(n), 0.05, 0.09)
-    swish = swish / np.max(np.abs(swish)) * 0.9
-    y = silence(1.2)
-    y = place(y, swish, 0.0)
-    y = place(y, bell(note("G5"), 0.9, 0.22) * 0.7, 0.24)
-    y = place(y, bell(note("C6"), 0.9, 0.3) * 0.8, 0.36)
-    return y
-
-
-def s_whistle():
-    """p4 teapot: a small, soft kettle whistle that rises and wavers."""
-    dur = 0.9
-    t = t_axis(dur)
-    f = 1350 + 260 * np.clip(t / 0.25, 0, 1) + 22 * np.sin(2 * np.pi * 7 * t)
-    y = np.sin(2 * np.pi * np.cumsum(f) / SR)
-    breath = fft_filter(noise(dur), 2500, 6500) * 0.25
-    return (y + breath) * env_swell(len(t), 0.12, 0.35)
-
-
-def s_drum():
-    """p5 dragon dance: the traditional lion/dragon-dance figure.
-
-    咚 咚 咚 锵 · 咚 锵 咚 锵 — three drum hits, a cymbal clash, then drum/clash
-    twice, on eight even beats. The drum leads (so the tap gets an instant hit)
-    and the last clash rings out as the 900 ms dance winds down.
-    """
-    def dong(f, dur=0.3, punch=1.0):
-        t = t_axis(dur)
-        body = np.sin(2 * np.pi * (f + f * 1.1 * np.exp(-t * 30)) * t) * np.exp(-t * 12)
-        skin = fft_filter(noise(dur), 180, 2200) * np.exp(-t * 38) * 0.3
-        return (body + skin) * punch
-
-    def qiang(dur, tau, gain=1.0):
-        """Cymbal clash: noise plus inharmonic metal partials, sharp strike."""
-        t = t_axis(dur)
-        y = fft_filter(noise(dur), 3000, 12000, soft=0.5)
-        for f, a in ((3110, 0.5), (4370, 0.4), (5230, 0.3), (6980, 0.25), (8410, 0.15)):
-            y += a * np.sin(2 * np.pi * f * t + rng.uniform(0, 6.28)) * 0.6
-        return y * env_ad(len(t), 0.002, tau) * gain
-
-    beat = 0.15
-    # (beat index, kind, drum pitch / cymbal ring)
-    figure = [
-        (0, "dong", 92), (1, "dong", 100), (2, "dong", 92), (3, "qiang", 0.07),
-        (4, "dong", 100), (5, "qiang", 0.07), (6, "dong", 92), (7, "qiang", 0.22),
-    ]
-    y = silence(1.6)
-    for i, kind, arg in figure:
-        at = i * beat
-        if kind == "dong":
-            y = place(y, dong(arg, punch=1.15 if i == 0 else 1.0), at)
-        else:
-            y = place(y, qiang(0.6, arg, 0.9), at)
-            y = place(y, dong(72, dur=0.2, punch=0.5), at)  # the low thud under a clash
-    return y
-
-
-def s_hum():
-    """p6-8 giving: a warm, happy two-note 'mm-hm'."""
-    def mm(f, dur):
-        y = tone(f, dur, harmonics=(1.0, 0.45, 0.2, 0.08), vib=0.012, vib_rate=5.5)
-        return fft_filter(y, None, 1600, soft=0.6) * env_swell(len(y), 0.06, 0.12)
-
-    y = silence(0.75)
-    y = place(y, mm(note("G4"), 0.3), 0.0)
-    y = place(y, mm(note("C5"), 0.42) * 0.95, 0.27)
-    return y
-
-
 def s_creak():
-    """p7 chair / p9 door: a slow, warm wooden creak (never a horror-movie one)."""
+    """A slow, warm wooden creak (never a horror-movie one)."""
     dur = 1.1
     t = t_axis(dur)
     f = 118 + 46 * np.sin(np.pi * t / dur) + 9 * np.sin(2 * np.pi * 5.5 * t)
@@ -293,7 +181,7 @@ def s_creak():
 
 
 def s_flare():
-    """p7 lantern / p10 candle: a gentle upward 'fwoosh' with a warm glint."""
+    """p12 candle: a gentle upward 'fwoosh' with a warm glint."""
     dur = 0.7
     n = noise(dur)
     sweep = np.linspace(350, 2600, len(n)) ** 1.0
@@ -304,7 +192,7 @@ def s_flare():
 
 
 def s_purr():
-    """p8 cat: a low, rolling purr — soft pulses at ~24 Hz through a throaty filter."""
+    """A low, rolling purr — soft pulses at ~24 Hz through a throaty filter."""
     dur = 1.3
     t = t_axis(dur)
     rate = 24 + 3 * np.sin(2 * np.pi * 0.9 * t)
@@ -315,29 +203,8 @@ def s_purr():
     return y * env_swell(len(t), 0.3, 0.55)
 
 
-def s_squeak():
-    """p8 toy: a squeaky-toy 'ee-eek' — two quick rising chirps."""
-    def chirp(f0, f1, d):
-        y = glide(f0, f1, d, harmonics=(1.0, 0.3, 0.1))
-        return y * env_swell(len(y), 0.02, 0.06)
-
-    y = silence(0.4)
-    y = place(y, chirp(1100, 1900, 0.13), 0.0)
-    y = place(y, chirp(1300, 2300, 0.16) * 0.9, 0.15)
-    return y
-
-
-def s_warm_chime():
-    """p10 reunion: a low, round three-note chord rolled upward, like a family gathering."""
-    y = silence(1.5)
-    for i, n in enumerate(("C5", "E5", "G5")):
-        y = place(y, bell(note(n), 1.4, 0.55, partials=[(1.0, 1.0), (2.0, 0.3), (3.0, 0.1)]) * 0.9, i * 0.11)
-    y = place(y, bell(note("C6"), 1.2, 0.5, partials=[(1.0, 1.0), (2.0, 0.2)]) * 0.5, 0.33)
-    return y
-
-
 def s_magic():
-    """p11 Jade Rabbit: a dreamy ascending twinkle that hangs in the air."""
+    """p10 golden leaf: a dreamy ascending twinkle that hangs in the air."""
     y = silence(1.5)
     seq = ["E5", "G5", "A5", "C6", "D6", "E6", "G6"]
     for i, n in enumerate(seq):
@@ -350,7 +217,7 @@ def s_magic():
 
 
 def s_lullaby():
-    """p12 bedtime: four soft music-box notes drifting down — a little goodnight sting."""
+    """p13 bedtime: four soft music-box notes drifting down — a little goodnight sting."""
     y = silence(1.5)
     for i, (n, g) in enumerate((("G5", 1.0), ("E5", 0.9), ("D5", 0.85), ("C5", 0.8))):
         y = place(y, music_box(note(n), 0.9, 0.34) * g, i * 0.24)
@@ -358,7 +225,7 @@ def s_lullaby():
 
 
 def s_whump():
-    """p12 blanket: a soft, low 'fwump' of settling in."""
+    """p2 rug, p13 blanket: a soft, low 'fwump' of settling in."""
     dur = 0.4
     t = t_axis(dur)
     body = np.sin(2 * np.pi * (48 + 60 * np.exp(-t * 22)) * t) * np.exp(-t * 11)
@@ -366,24 +233,95 @@ def s_whump():
     return body + cloth
 
 
+def s_jingle():
+    """p1 wreath: a few tiny shaken bells."""
+    y = silence(0.8)
+    for i, n in enumerate(("E6", "G6", "E6", "A6", "G6")):
+        y = place(y, bell(note(n), 0.5, 0.12) * rng.uniform(0.6, 1.0), i * 0.085)
+    return y
+
+
+def s_leaf_boop():
+    """p3-6, p9: the leaf lands on the tree — a soft rising 'boop'."""
+    y = glide(note("C5"), note("G5"), 0.2, harmonics=(1.0, 0.25), curve=0.6)
+    return y * env_ad(len(y), 0.006, 0.09)
+
+
+def s_leaf_purr():
+    """p8: the same boop, then 小猫's purr."""
+    y = place(silence(1.3), s_leaf_boop(), 0.0)
+    return place(y, s_purr() * 0.8, 0.14)
+
+
+def s_bike_bell():
+    """p4 extra: ring-ring."""
+    y = silence(0.7)
+    partials = [(1.0, 1.0), (1.5, 0.45), (2.76, 0.2)]
+    y = place(y, bell(note("A6"), 0.4, 0.12, partials=partials), 0.0)
+    return place(y, bell(note("A6"), 0.5, 0.15, partials=partials), 0.17)
+
+
+def s_hiss():
+    """p5, p8 extras: steam — a soft, airy puff."""
+    y = fft_filter(noise(0.8), 2500, 9000, soft=0.8)
+    return y * env_swell(len(y), 0.12, 0.5)
+
+
+def s_trickle():
+    """p6 extra: water from the can — a run of tiny rising droplets."""
+    y = silence(1.0)
+    for at in np.sort(rng.uniform(0.0, 0.8, 14)):
+        f = rng.uniform(900, 1900)
+        d = glide(f, f * 1.5, 0.06) * env_swell(int(0.06 * SR), 0.01, 0.04)
+        y = place(y, d * rng.uniform(0.4, 1.0), at)
+    return y
+
+
+def s_doorbell():
+    """p7: ding-dong, with the door's warm creak under the end."""
+    partials = [(1.0, 1.0), (2.0, 0.25)]
+    y = silence(1.5)
+    y = place(y, bell(note("E5"), 0.9, 0.3, partials=partials), 0.0)
+    y = place(y, bell(note("C5"), 1.0, 0.34, partials=partials), 0.34)
+    return place(y, s_creak()[: int(0.8 * SR)] * 0.18, 0.68)
+
+
+def s_boing():
+    """p9 extra: the park ball — a soft rubbery bounce."""
+    y = glide(180, 430, 0.26, harmonics=(1.0, 0.3), curve=0.5)
+    return y * env_ad(len(y), 0.004, 0.1)
+
+
+def s_count_blip():
+    """p11: one gentle tick per counted leaf."""
+    return music_box(note("A5"), 0.3, 0.12)
+
+
+def s_clink():
+    """p12: two glasses touching."""
+    partials = [(1.0, 1.0), (2.4, 0.4), (4.1, 0.2)]
+    y = silence(0.6)
+    y = place(y, bell(note("E7"), 0.4, 0.1, partials=partials), 0.0)
+    return place(y, bell(note("B6"), 0.45, 0.12, partials=partials) * 0.8, 0.11)
+
+
 SOUNDS = {
-    "chime": s_chime,
-    "hush": s_hush,
+    "wind-chime": s_wind_chime,
+    "jingle": s_jingle,
     "rustle": s_rustle,
-    "tap": s_tap,
-    "sparkle": s_sparkle,
-    "slice": s_slice,
-    "whistle": s_whistle,
-    "drum": s_drum,
-    "hum": s_hum,
-    "creak": s_creak,
-    "flare": s_flare,
-    "purr": s_purr,
-    "squeak": s_squeak,
-    "warm-chime": s_warm_chime,
-    "magic": s_magic,
-    "lullaby": s_lullaby,
     "whump": s_whump,
+    "leaf-boop": s_leaf_boop,
+    "leaf-purr": s_leaf_purr,
+    "bike-bell": s_bike_bell,
+    "hiss": s_hiss,
+    "trickle": s_trickle,
+    "doorbell": s_doorbell,
+    "boing": s_boing,
+    "magic": s_magic,
+    "count-blip": s_count_blip,
+    "clink": s_clink,
+    "flare": s_flare,
+    "lullaby": s_lullaby,
 }
 
 

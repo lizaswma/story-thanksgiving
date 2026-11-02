@@ -6,8 +6,8 @@ export const DEFAULT_LANGUAGE: Language = "zh";
 
 /** Spoken number words for the counting page (PRD §5, page 11). */
 export const NUMBER_WORDS: Record<Language, string[]> = {
-  zh: ["一", "二", "三", "四", "五", "六"],
-  en: ["one", "two", "three", "four", "five", "six"],
+  zh: ["一", "二", "三", "四", "五", "六", "七"],
+  en: ["one", "two", "three", "four", "five", "six", "seven"],
 };
 
 /** Static UI strings (parent menu, hints). Story text lives in book.ts. */

@@ -1,23 +1,26 @@
 # Scene art
 
-One folder per step. `00` is the title card; `01`–`12` are the story pages
-(PRD.md §5). Every file is referenced from `src/book.ts`. Until a file exists,
-the app shows a labelled placeholder box with its id (milestone M0).
+One folder per step. `00` is the title card; `01`–`13` are the story pages
+(PRD.md §5). Every file is referenced from `src/book.ts`.
+
+**The current `.svg` plates are vector layout art** from
+`node tools/make-layout-art.mjs`: edit the script, not the SVGs. Real art in M2
+drops in as `.webp` beside them, then `ART_EXT` in `book.ts` flips to `"webp"`.
 
 | Folder | Files |
 |---|---|
-| `00` | `background.webp` (小兔 in her scarf beside the full six-leaf tree) |
-| `01` | `background.webp`, `scene-leaves.webp`, `door-wreath.webp` |
-| `02` | `background.webp` (bare tree), `scene-basket.webp`, `window-leaves.webp`, `rug-wiggle.webp` |
-| `03`–`06`, `08` | `background.webp` (bare tree, 小兔 holding the leaf, person with prop), `scene-thanked.webp` (person's reaction), plus that page's extras |
-| `07` | `background.webp`, `scene-open.webp` (小猫 with the pie), `window-leaves.webp` |
-| `09` | `background.webp` (the whole family, right), `scene-thanked.webp` |
-| `10` | `background.webp` (the tree, large) |
-| `11` | `background.webp`, `scene-dinner.webp`, `window-leaves.webp`, `candle-flare.webp` |
-| `12` | `background.webp`, `scene-off.webp`, `window-leaves.webp`, `window-leaves-off.webp`, `blanket-wiggle.webp` |
+| `00` | `background` (小兔 in her scarf beside the full seven-leaf tree) |
+| `01` | `background`, `scene-leaves`, `door-wreath` |
+| `02` | `background` (bare tree), `scene-basket`, `window-leaves`, `rug-wiggle` |
+| `03`–`06`, `08`, `09` | `background` (bare tree, 小兔 holding the leaf, person with prop), `scene-thanked` (person's reaction), plus that page's extras |
+| `07` | `background`, `scene-open` (小猫 with the pie), `window-leaves` |
+| `10` | `background` (the whole group, right), `scene-thanked` |
+| `11` | `background` (the tree, large) |
+| `12` | `background`, `scene-dinner`, `window-leaves`, `candle-flare` |
+| `13` | `background`, `scene-off`, `window-leaves`, `window-leaves-off`, `blanket-wiggle` |
 
 **Draw the tree bare on every plate.** Leaves are composited in code from
-`/public/leaves/{red,orange,yellow,green,brown,golden}.webp` (transparent) so the
+`/public/leaves/{red,orange,yellow,green,brown,purple,golden}` (transparent) so the
 count carries over page to page. Each page's `tree.area` in `book.ts` must be
 re-measured to the tree's box on the real art, and `SLOTS` in
 `src/components/ThankfulTree.tsx` nudged onto the branches.

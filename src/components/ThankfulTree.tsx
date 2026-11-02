@@ -3,7 +3,7 @@ import type { Tree } from "../types";
 import { LEAVES, leafSrc } from "../book";
 
 // Where each leaf sits on the tree, as % of the tree's area (PRD §9.4). Index
-// matches LEAVES: five colored leaves spread over the branches, the golden one
+// matches LEAVES: six colored leaves spread over the branches, the golden one
 // at the top. Nudge these once the real bare-tree art exists.
 const SLOTS = [
   { x: 22, y: 40 },
@@ -11,6 +11,7 @@ const SLOTS = [
   { x: 32, y: 18 },
   { x: 66, y: 14 },
   { x: 50, y: 46 },
+  { x: 92, y: 16 },
   { x: 50, y: 2 },
 ];
 
