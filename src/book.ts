@@ -212,7 +212,9 @@ export const PAGES: Page[] = [
       total: 7,
       counting: true,
       leafFrom: { x: 70, y: 40 },
-      hotspot: { x: 5, y: 2, w: 30, h: 26 }, // the treetop
+      // The whole picture: on every other thank-you page the child taps 小兔,
+      // so tapping her, the group or the tree must all give the golden leaf.
+      hotspot: { x: 4, y: 2, w: 92, h: 80 },
     },
     tree: tree(6, REAL_TREE),
     // No extras — protect the golden-leaf reveal (PRD §7.1).

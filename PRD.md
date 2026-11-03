@@ -116,7 +116,7 @@ tree. Start: 开始 / Start.
 | 7 | Doorbell | 叮咚！小猫来了！ | Ding-dong! Mr. Cat is here! | Tap door → opens, 小猫 standing there holding a pumpkin pie (callback to his book-1 doorway) | doorbell + warm creak |
 | 8 | Thank 小猫 | 谢谢小猫做我朋友！ | Thank you, Mr. Cat, for being my friend! | Brown leaf → tree, badge **5**; 小猫's tail swishes | leaf boop + purr |
 | 9 | Thank 熊阿姨 | 谢谢熊阿姨带我去公园！ | Thank you, Ms. Bear, for taking me to the park! | Purple leaf → tree, badge **6**; 熊阿姨 (from book 1, holding a kite, park ball beside her) waves both paws, her book-1 pose | leaf boop |
-| 10 | The twist | 大家说：谢谢小兔！ | Everyone says: Thank you, Little Rabbit! | 小兔's paws are empty. Tap the treetop → everyone adds a big **golden leaf** for her, badge **7**; 小兔 goes shy-happy | magical twinkle |
+| 10 | The twist | 大家说：谢谢小兔！ | Everyone says: Thank you, Little Rabbit! | 小兔's paws are empty. Tap anywhere (小兔, the group or the tree) → everyone adds a big **golden leaf** for her, badge **7**; 小兔 goes shy-happy | magical twinkle |
 | 11 | Count | 数一数树叶。 | Let's count the leaves. | Tap each leaf (×7) → it lights up, voice counts 一…七 / one…seven, numeral appears | gentle count blips |
 | 12 | Dinner | 一家人吃大餐！ | Time for the big dinner! | Tap table → dishes steam, everyone settles in: turkey, 婆婆's dumplings, 小猫's pie, 公公's flower in a vase as centerpiece | happy clink |
 | 13 | Bedtime | 感恩节快乐，晚安！ | Happy Thanksgiving. Good night! | Tap lamp → room dims, the tree glows softly, 小兔 curls up asleep | lullaby sting |
