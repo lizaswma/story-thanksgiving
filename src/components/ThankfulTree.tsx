@@ -12,7 +12,7 @@ const SLOTS = [
   { x: 66, y: 14 },
   { x: 50, y: 46 },
   { x: 7, y: 43 },
-  { x: 50, y: 6 },
+  { x: 50, y: 11 },
 ];
 
 /** A leaf's slot on the stage, in % of the stage. */

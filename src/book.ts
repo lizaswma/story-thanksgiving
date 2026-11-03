@@ -5,7 +5,7 @@ import type { Asset, Hotspot, Page, TitleCard, Tree } from "./types";
 // tools/make-layout-art.mjs. Real art in M2 arrives as webp, one page at a time;
 // add each finished page to REAL_ART_PAGES.
 export const ART_EXT = "svg";
-const REAL_ART_PAGES = new Set([3, 4, 5, 6, 8, 9, 10]);
+const REAL_ART_PAGES = new Set([3, 4, 5, 6, 8, 9, 10, 11]);
 export const artExt = (n: number) => (REAL_ART_PAGES.has(n) ? "webp" : ART_EXT);
 const pageDir = (n: number) => `/pages/${String(n).padStart(2, "0")}`;
 
@@ -79,6 +79,8 @@ const REAL_TREE: Hotspot = { x: 2, y: 7, w: 36, h: 71 };
 const REAL_RABBIT: Hotspot = { x: 33, y: 42, w: 22, h: 50 };
 const REAL_LEAF_START = { x: 51.5, y: 65 };
 const REAL_WINDOW: Hotspot = { x: 41, y: 5, w: 18, h: 30 };
+// Page 11: the same tree, centred (little-rabbit-style/tools/compose-p11.py).
+const COUNT_TREE: Hotspot = { x: 32, y: 7, w: 36, h: 71 };
 const tree = (leaves: number, area: Hotspot = TREE_LEFT): Tree => ({ area, leaves });
 
 // Falling leaves outside the window — the book's recurring through-line extra,
@@ -230,9 +232,9 @@ export const PAGES: Page[] = [
       count: 7,
       stickers: [],
       counting: true,
-      hotspot: { x: 20, y: 6, w: 60, h: 70 }, // the tree, bigger here
+      hotspot: COUNT_TREE,
     },
-    tree: tree(7, { x: 20, y: 6, w: 60, h: 70 }),
+    tree: tree(7, COUNT_TREE),
     // No extras — keep the counting taps unambiguous (PRD §7.1).
   },
   {
