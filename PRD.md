@@ -167,7 +167,7 @@ Each person holds the prop that shows *why* they're thanked; the tap reaction re
 | 5 · 婆婆 · food | In an apron, holding a steaming bowl of dumplings | Lifts the bowl a little, steam puff, warm smile | apron + bowl pose |
 | 6 · 公公 · gardening | Beside a flower pot (closed bud) with a tiny watering can, cap on, cane | Flower **pops into bloom**, he tips his cap | gardening pose, pot (bud/bloom), watering can |
 | 8 · 小猫 · friend | Just inside the door, holding the pie from page 7 | Tail swish | pie-holding pose (shared with page 7) |
-| 9 · 熊阿姨 · park | Holding a kite, park ball beside her | Waves both paws (book 1 `bear-wave` pose) | kite pose, kite + ball props; she has no locked reference yet, so add one to `character/cast/` from `story-halloween/public/pages/08/bear-wave.webp` |
+| 9 · 熊阿姨 · park | Holding a kite, park ball beside her | Waves both paws (book 1 `bear-wave` pose) | kite pose, kite + ball props; locked reference: `character/cast/bear.png` |
 
 ### 6.2 Page 10 breaks the layout — on purpose
 
@@ -266,7 +266,7 @@ any smile.
 
 ### 9.2 New costume (series pack)
 
-- **`character/costumes/scarf.png`** — a small knit scarf in warm orange (reuse the
+- **`character/costumes/scarf.png`** (locked 2026-11-02) — a small knit scarf in warm orange (reuse the
   `pumpkin` `#EE9C53` token, `pumpkinShadow` for the knit shading — flat, no rendered
   texture), wrapped once around the neck line with a short tail. Face, both ears, arms,
   and feet stay fully visible. Worn on every page. Added to the style pack (series
