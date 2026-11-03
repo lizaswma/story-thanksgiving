@@ -4,8 +4,11 @@ One folder per step. `00` is the title card; `01`–`13` are the story pages
 (PRD.md §5). Every file is referenced from `src/book.ts`.
 
 **The current `.svg` plates are vector layout art** from
-`node tools/make-layout-art.mjs`: edit the script, not the SVGs. Real art in M2
-drops in as `.webp` beside them, then `ART_EXT` in `book.ts` flips to `"webp"`.
+`node tools/make-layout-art.mjs`: edit the script, not the SVGs. Real art (M2)
+replaces them page by page as `.webp`: add the page to `REAL_ART_PAGES` in
+`book.ts` and delete the plates it replaces (the script skips any plate that
+has a `.webp`). Pages 3–6 have real art so far; the prompts live in
+`little-rabbit-style/tools/scenes-thanksgiving.json`.
 
 | Folder | Files |
 |---|---|

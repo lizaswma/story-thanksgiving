@@ -11,7 +11,7 @@
  * Usage (from the repo root):  node tools/make-layout-art.mjs
  * Writes public/pages/NN/*.svg and public/leaves/*.svg.
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -396,7 +396,7 @@ function windowFrame(x, y, w, h, { leaves = false, night = false, dim = false } 
     rect(x, y, w, h, night ? C.night : C.sky, 12, stroke(9, C.wood)) +
     (night
       ? ell(x + w * 0.72, y + h * 0.3, h * 0.13, h * 0.13, C.moon) + star(x + w * 0.24, y + h * 0.24, 8) + star(x + w * 0.4, y + h * 0.62, 7)
-      : ell(x + w / 2, y + h + 8, w * 0.46, h * 0.28, C.stem) + rect(x + 4, y + h * 0.88, w - 8, h * 0.12 - 4, C.stem)) +
+      : path(`M${x + 4} ${y + h - 4}Q${x + w / 2} ${y + h * 0.5} ${x + w - 4} ${y + h - 4}Z`, C.stem)) +
     (leaves
       ? fall.map(([fx, fy, c, r]) => `<g opacity="${dim ? 0.7 : 1}">${leaf(x + fx * w, y + fy * h, size, LEAF[c], r)}</g>`).join("")
       : "") +
@@ -663,6 +663,8 @@ const write = (rel, content) => {
 let count = 0;
 for (const [page, files] of Object.entries(PAGES)) {
   for (const [id, content] of Object.entries(files)) {
+    // A plate that real art has replaced stays gone.
+    if (existsSync(resolve(ROOT, "public", `pages/${page}/${id}.webp`))) continue;
     write(`pages/${page}/${id}.svg`, content);
     count++;
   }
