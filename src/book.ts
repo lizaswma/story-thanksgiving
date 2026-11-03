@@ -5,7 +5,7 @@ import type { Asset, Hotspot, Page, TitleCard, Tree } from "./types";
 // tools/make-layout-art.mjs. Real art in M2 arrives as webp, one page at a time;
 // add each finished page to REAL_ART_PAGES.
 export const ART_EXT = "svg";
-const REAL_ART_PAGES = new Set([3, 4, 5, 6]);
+const REAL_ART_PAGES = new Set([3, 4, 5, 6, 8, 9, 10]);
 export const artExt = (n: number) => (REAL_ART_PAGES.has(n) ? "webp" : ART_EXT);
 const pageDir = (n: number) => `/pages/${String(n).padStart(2, "0")}`;
 
@@ -74,7 +74,7 @@ const TREE_LEFT: Hotspot = { x: 5, y: 8, w: 28, h: 62 };
 const RABBIT_CENTRE: Hotspot = { x: 40, y: 36, w: 22, h: 50 }; // 小兔 and the leaf in her paws
 const LEAF_START = { x: 54, y: 73 }; // where that leaf is drawn, so its flight starts on it
 const ROOM_WINDOW: Hotspot = { x: 46, y: 5, w: 20, h: 28 };
-// The same three, measured on the real thank-you art (pages 3–6 so far, which share one room).
+// The same three, measured on the real thank-you art (pages 3–6 and 8–10, which share one room).
 const REAL_TREE: Hotspot = { x: 2, y: 7, w: 36, h: 71 };
 const REAL_RABBIT: Hotspot = { x: 33, y: 42, w: 22, h: 50 };
 const REAL_LEAF_START = { x: 51.5, y: 65 };
@@ -183,8 +183,8 @@ export const PAGES: Page[] = [
     5,
     { zh: "谢谢小猫做我朋友！", en: "Thank you, Mr. Cat, for being my friend!" },
     [
-      windowLeaves(ROOM_WINDOW),
-      { flash: "pie-steam", sfx: "hiss", hotspot: { x: 62, y: 44, w: 16, h: 22 } },
+      windowLeaves(REAL_WINDOW),
+      { flash: "pie-steam", sfx: "hiss", hotspot: { x: 57, y: 54, w: 16, h: 22 } },
     ],
     "leaf-purr",
   ),
@@ -193,8 +193,8 @@ export const PAGES: Page[] = [
     6,
     { zh: "谢谢熊阿姨带我去公园！", en: "Thank you, Ms. Bear, for taking me to the park!" },
     [
-      windowLeaves(ROOM_WINDOW),
-      { flash: "park-ball", sfx: "boing", hotspot: { x: 84, y: 70, w: 14, h: 18 } },
+      windowLeaves(REAL_WINDOW),
+      { flash: "park-ball", sfx: "boing", hotspot: { x: 86, y: 69, w: 12, h: 21 } },
     ],
   ),
   {
@@ -211,10 +211,10 @@ export const PAGES: Page[] = [
       to: "scene-thanked",
       total: 7,
       counting: true,
-      leafFrom: { x: 78, y: 40 },
-      hotspot: { x: 5, y: 2, w: 30, h: 30 }, // the treetop
+      leafFrom: { x: 70, y: 40 },
+      hotspot: { x: 5, y: 2, w: 30, h: 26 }, // the treetop
     },
-    tree: tree(6),
+    tree: tree(6, REAL_TREE),
     // No extras — protect the golden-leaf reveal (PRD §7.1).
   },
   {
