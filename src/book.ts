@@ -1,11 +1,11 @@
 import type { Asset, Hotspot, Page, TitleCard, Tree } from "./types";
 
 // ── Asset path helpers (same convention as books 1–2) ──────────────────────
-// Plates live in /public/pages/NN/. For now they're the vector layout art from
-// tools/make-layout-art.mjs. Real art in M2 arrives as webp, one page at a time;
+// Plates live in /public/pages/NN/. Pages not yet in REAL_ART_PAGES still use the
+// vector layout art from tools/make-layout-art.mjs. Real art (M2) is webp;
 // add each finished page to REAL_ART_PAGES.
 export const ART_EXT = "svg";
-const REAL_ART_PAGES = new Set([3, 4, 5, 6, 8, 9, 10, 11]);
+const REAL_ART_PAGES = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 export const artExt = (n: number) => (REAL_ART_PAGES.has(n) ? "webp" : ART_EXT);
 const pageDir = (n: number) => `/pages/${String(n).padStart(2, "0")}`;
 
@@ -67,21 +67,16 @@ const LEAF_LINES = [
   { zh: "金叶子，七片！", en: "A golden leaf. Seven!" },
 ];
 
-// Hotspots are % of the stage {x,y = top-left, w,h}, measured against the vector
-// layout art (PRD §6: tree left, 小兔 centre, person right) — re-check every one
-// against the real art at M2.
-const TREE_LEFT: Hotspot = { x: 5, y: 8, w: 28, h: 62 };
-const RABBIT_CENTRE: Hotspot = { x: 40, y: 36, w: 22, h: 50 }; // 小兔 and the leaf in her paws
-const LEAF_START = { x: 54, y: 73 }; // where that leaf is drawn, so its flight starts on it
-const ROOM_WINDOW: Hotspot = { x: 46, y: 5, w: 20, h: 28 };
-// The same three, measured on the real thank-you art (pages 3–6 and 8–10, which share one room).
-const REAL_TREE: Hotspot = { x: 2, y: 7, w: 36, h: 71 };
-const REAL_RABBIT: Hotspot = { x: 33, y: 42, w: 22, h: 50 };
-const REAL_LEAF_START = { x: 51.5, y: 65 };
-const REAL_WINDOW: Hotspot = { x: 41, y: 5, w: 18, h: 30 };
+// Hotspots are % of the stage {x,y = top-left, w,h}, measured on the real art.
+// The thank-you pages (2–6, 8–10) share one room (PRD §6: tree left, 小兔
+// centre, person right), so these are measured once.
+const TREE: Hotspot = { x: 2, y: 7, w: 36, h: 71 };
+const RABBIT: Hotspot = { x: 33, y: 42, w: 22, h: 50 }; // 小兔 and the leaf in her paws
+const LEAF_START = { x: 51.5, y: 65 }; // where that leaf is drawn, so its flight starts on it
+const ROOM_WINDOW: Hotspot = { x: 41, y: 5, w: 18, h: 30 };
 // Page 11: the same tree, centred (little-rabbit-style/tools/compose-p11.py).
 const COUNT_TREE: Hotspot = { x: 32, y: 7, w: 36, h: 71 };
-const tree = (leaves: number, area: Hotspot = TREE_LEFT): Tree => ({ area, leaves });
+const tree = (leaves: number, area: Hotspot = TREE): Tree => ({ area, leaves });
 
 // Falling leaves outside the window — the book's recurring through-line extra,
 // like book 2's moon (PRD §7.1).
@@ -99,7 +94,6 @@ function thankPage(
   extras: Page["extras"] = [],
   sfx = "leaf-boop",
 ): Page {
-  const real = REAL_ART_PAGES.has(id);
   return {
     id,
     text,
@@ -112,10 +106,10 @@ function thankPage(
       to: "scene-thanked",
       total,
       counting: true,
-      leafFrom: real ? REAL_LEAF_START : LEAF_START,
-      hotspot: real ? REAL_RABBIT : RABBIT_CENTRE,
+      leafFrom: LEAF_START,
+      hotspot: RABBIT,
     },
-    tree: tree(total - 1, real ? REAL_TREE : TREE_LEFT),
+    tree: tree(total - 1),
     extras,
   };
 }
@@ -130,9 +124,9 @@ export const PAGES: Page[] = [
       kind: "swap",
       sfx: "wind-chime",
       to: "scene-leaves",
-      hotspot: { x: 55, y: 10, w: 30, h: 42 }, // the window
+      hotspot: { x: 52, y: 6, w: 32, h: 54 }, // the window
     },
-    extras: [{ flash: "door-wreath", sfx: "jingle", hotspot: { x: 15, y: 20, w: 18, h: 26 } }],
+    extras: [{ flash: "door-wreath", sfx: "jingle", hotspot: { x: 9, y: 15, w: 15, h: 28 } }],
   },
   {
     id: 2,
@@ -144,27 +138,27 @@ export const PAGES: Page[] = [
       kind: "swap",
       sfx: "rustle",
       to: "scene-basket",
-      hotspot: { x: 50, y: 52, w: 22, h: 32 }, // the leaf basket
+      hotspot: { x: 49, y: 58, w: 18, h: 36 }, // the leaf basket
     },
     tree: tree(0),
     extras: [
-      windowLeaves(ROOM_WINDOW),
-      { flash: "rug-wiggle", sfx: "whump", hotspot: { x: 33, y: 84, w: 36, h: 13 } },
+      windowLeaves({ x: 42, y: 6, w: 16, h: 28 }),
+      { flash: "rug-wiggle", sfx: "whump", hotspot: { x: 26, y: 90, w: 56, h: 8 } },
     ],
   },
   thankPage(3, 1, { zh: "谢谢妈妈给我读书！", en: "Thank you, Mama, for reading to me!" }, [
-    windowLeaves(REAL_WINDOW),
+    windowLeaves(ROOM_WINDOW),
   ]),
   thankPage(4, 2, { zh: "谢谢爸爸陪我骑车！", en: "Thank you, Baba, for biking with me!" }, [
-    windowLeaves(REAL_WINDOW),
+    windowLeaves(ROOM_WINDOW),
     { flash: "bike-bell", sfx: "bike-bell", hotspot: { x: 80, y: 59, w: 19, h: 33 } },
   ]),
   thankPage(5, 3, { zh: "谢谢婆婆做好吃的！", en: "Thank you, Grandma, for yummy food!" }, [
-    windowLeaves(REAL_WINDOW),
+    windowLeaves(ROOM_WINDOW),
     { flash: "steam-puff", sfx: "hiss", hotspot: { x: 55, y: 24, w: 15, h: 52 } }, // the bowl, low then lifted
   ]),
   thankPage(6, 4, { zh: "谢谢公公陪我种花！", en: "Thank you, Grandpa, for gardening with me!" }, [
-    windowLeaves(REAL_WINDOW),
+    windowLeaves(ROOM_WINDOW),
     { flash: "watering-can", sfx: "trickle", hotspot: { x: 82, y: 68, w: 17, h: 21 } },
   ]),
   {
@@ -176,16 +170,16 @@ export const PAGES: Page[] = [
       kind: "swap",
       sfx: "doorbell",
       to: "scene-open",
-      hotspot: { x: 59, y: 15, w: 24, h: 64 }, // the front door
+      hotspot: { x: 55, y: 6, w: 24, h: 77 }, // the front door
     },
-    extras: [windowLeaves({ x: 20, y: 10, w: 22, h: 30 })],
+    extras: [windowLeaves({ x: 18, y: 6, w: 16, h: 28 })],
   },
   thankPage(
     8,
     5,
     { zh: "谢谢小猫做我朋友！", en: "Thank you, Mr. Cat, for being my friend!" },
     [
-      windowLeaves(REAL_WINDOW),
+      windowLeaves(ROOM_WINDOW),
       { flash: "pie-steam", sfx: "hiss", hotspot: { x: 57, y: 54, w: 16, h: 22 } },
     ],
     "leaf-purr",
@@ -195,7 +189,7 @@ export const PAGES: Page[] = [
     6,
     { zh: "谢谢熊阿姨带我去公园！", en: "Thank you, Ms. Bear, for taking me to the park!" },
     [
-      windowLeaves(REAL_WINDOW),
+      windowLeaves(ROOM_WINDOW),
       { flash: "park-ball", sfx: "boing", hotspot: { x: 86, y: 69, w: 12, h: 21 } },
     ],
   ),
@@ -218,7 +212,7 @@ export const PAGES: Page[] = [
       // so tapping her, the group or the tree must all give the golden leaf.
       hotspot: { x: 4, y: 2, w: 92, h: 80 },
     },
-    tree: tree(6, REAL_TREE),
+    tree: tree(6),
     // No extras — protect the golden-leaf reveal (PRD §7.1).
   },
   {
