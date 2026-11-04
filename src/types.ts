@@ -107,7 +107,11 @@ export type ExtraTap = {
    * that region is harmless. Almost always pair with `focus`.
    */
   aboveReveal?: boolean;
-  /** With `aboveReveal`: confine the flash to this feathered region (% of stage). */
+  /**
+   * Confine the flash to this feathered region (% of stage); defaults to the
+   * hotspot. The flash plates are model edits that may drift a little away
+   * from the thing they change, so only the tapped area ever shows.
+   */
   focus?: Hotspot;
 };
 

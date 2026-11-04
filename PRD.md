@@ -227,7 +227,7 @@ unambiguous).
 | # | Extras (flash / sfx) — *proposed, confirm against real art* |
 |---|---|
 | 1 | *(window is the main interaction)* · `door-wreath` / jingle |
-| 2 | `window-leaves` / wind chime · `rug-wiggle` / soft whump |
+| 2 | `window-leaves` / wind chime (no rug tap: the rug sits under the caption) |
 | 3 | `window-leaves` / wind chime |
 | 4 | `bike-bell` / ring-ring |
 | 5 | `window-leaves` / wind chime · `steam-puff` / soft hiss |

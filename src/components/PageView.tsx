@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { ExtraTap, Hotspot, Page } from "../types";
-import { artExt } from "../book";
+import { ART_EXT } from "../book";
 import { useBook } from "../context/BookContext";
 import { t } from "../i18n";
 import {
@@ -164,10 +164,10 @@ export function PageView({ page }: { page: Page }) {
           key={x.flash}
           asset={{
             id: x.flash,
-            src: `/pages/${pad(page.id)}/${(opened || thanked) && x.flashAfter ? x.flashAfter : x.flash}.${artExt(page.id)}`,
+            src: `/pages/${pad(page.id)}/${(opened || thanked) && x.flashAfter ? x.flashAfter : x.flash}.${ART_EXT}`,
           }}
           className={`extra-flash ${x.aboveReveal ? "above-reveal" : ""}`}
-          style={x.focus ? focusMask(x.focus) : undefined}
+          style={focusMask(x.focus ?? x.hotspot)}
           hidden={!flashing[x.flash]}
         />
       ))}

@@ -611,7 +611,6 @@ const PAGES = {
       background: plate(),
       "scene-basket": plate({ full: true }),
       "window-leaves": plate({ leaves: true }),
-      "rug-wiggle": plate({ wiggle: true }),
     };
   })(),
   "03": thankPlate(0, 0, person.mama, { extras: [["window-leaves", "window"]] }),
@@ -670,6 +669,7 @@ for (const [page, files] of Object.entries(PAGES)) {
   }
 }
 for (const id of LEAF_ORDER) {
+  if (existsSync(resolve(ROOT, "public", `leaves/${id}.webp`))) continue;
   write(
     `leaves/${id}.svg`,
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${path(LEAF_PATH, LEAF[id], stroke(5))}${path("M50 26L50 80M50 50L34 38M50 50L66 38", "none", stroke(3.5))}</svg>\n`,
