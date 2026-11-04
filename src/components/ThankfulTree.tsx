@@ -61,22 +61,22 @@ function Leaf({
 /**
  * The thankful tree's leaves, composited over the page art (PRD §5: leaves
  * carry over page to page). `shown` leaves sit in their slots; `flying`, if
- * set, is the one arcing in from `from` right now; the first `counted` leaves
- * light up with a numeral (page 10).
+ * set, is the one arcing in from `from` right now; the leaves in `countOrder`
+ * light up with their numeral, 1 for the first one tapped (page 11).
  */
 export function ThankfulTree({
   tree,
   shown,
   flying,
   from,
-  counted = 0,
+  countOrder = [],
   glowing = false,
 }: {
   tree: Tree;
   shown: number;
   flying?: number;
   from?: { x: number; y: number };
-  counted?: number;
+  countOrder?: number[];
   glowing?: boolean;
 }) {
   return (
@@ -102,13 +102,14 @@ export function ThankfulTree({
               "--my": `${Math.min(from.y, at.y) - 12}%`,
             } as CSSProperties)
           : { ...size, left: `${at.x}%`, top: `${at.y}%` };
+        const num = countOrder.indexOf(i) + 1; // 0 = not counted yet
         return (
           <Leaf
             key={i}
             i={i}
             style={style}
-            className={`${isFlying ? "is-flying" : ""} ${i < counted ? "is-counted" : ""}`}
-            num={i < counted ? i + 1 : undefined}
+            className={`${isFlying ? "is-flying" : ""} ${num ? "is-counted" : ""}`}
+            num={num || undefined}
           />
         );
       })}

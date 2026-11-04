@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
-import type { ExtraTap, Hotspot, Page } from "../types";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import type { ExtraTap, Hotspot, Page, Tree } from "../types";
 import { ART_EXT } from "../book";
 import { useBook } from "../context/BookContext";
 import { t } from "../i18n";
@@ -10,7 +10,7 @@ import {
   stopNarration,
 } from "../audio/sound";
 import { Layer } from "./Layer";
-import { ThankfulTree } from "./ThankfulTree";
+import { ThankfulTree, slotOnStage } from "./ThankfulTree";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -34,6 +34,9 @@ export function PageView({ page }: { page: Page }) {
   const [twinkling, setTwinkling] = useState(false);
   const [thanked, setThanked] = useState(false);
   const [stuck, setStuck] = useState(0);
+  // Counting page: the leaves in the order the child tapped them, so the
+  // number lands on the leaf she touched.
+  const [countOrder, setCountOrder] = useState<number[]>([]);
   // Easter eggs clear themselves on a timer so the element can be tapped
   // again right away.
   const [flashing, setFlashing] = useState<Record<string, boolean>>({});
@@ -84,8 +87,12 @@ export function PageView({ page }: { page: Page }) {
     bannerTimer.current = window.setTimeout(() => setBannerDim(true), 4200);
   }
 
-  function handleTap() {
+  function handleTap(e: MouseEvent<HTMLButtonElement>) {
     playSfx(it.sfx);
+    if (it.kind === "stick" && it.counting && page.tree) {
+      countNearestLeaf(e, page.tree);
+      return;
+    }
     if (it.kind === "glow" || it.kind === "twinkle") setMainTapNonce((n) => n + 1);
     switch (it.kind) {
       case "swap":
@@ -111,6 +118,30 @@ export function PageView({ page }: { page: Page }) {
         });
         break;
     }
+  }
+
+  /** Counting page: the uncounted leaf nearest the tap gets the next number. */
+  function countNearestLeaf(e: MouseEvent<HTMLButtonElement>, tree: Tree) {
+    const stage = e.currentTarget.parentElement!.getBoundingClientRect();
+    const tap = {
+      x: ((e.clientX - stage.left) / stage.width) * 100,
+      y: ((e.clientY - stage.top) / stage.height) * 100,
+    };
+    // Stage % is wider than it is tall (16:9), so weigh x and y alike in pixels.
+    const aspect = stage.width / stage.height;
+    let nearest = -1;
+    let best = Infinity;
+    for (let i = 0; i < tree.leaves; i++) {
+      if (countOrder.includes(i)) continue;
+      const at = slotOnStage(tree, i);
+      const d = ((at.x - tap.x) * aspect) ** 2 + (at.y - tap.y) ** 2;
+      if (d < best) [best, nearest] = [d, i];
+    }
+    if (nearest < 0) return; // all counted
+    const next = countOrder.length + 1;
+    setCountOrder([...countOrder, nearest]);
+    setStuck(next);
+    playCount(next, language);
   }
 
   function tapExtra(x: ExtraTap) {
@@ -250,7 +281,7 @@ export function PageView({ page }: { page: Page }) {
                 })
               : undefined
           }
-          counted={it.kind === "stick" && it.counting ? stuck : 0}
+          countOrder={countOrder}
           glowing={!!page.tree.glowOnOpen && opened}
         />
       )}
