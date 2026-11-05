@@ -16,9 +16,8 @@ which is a thin copy of `src/book.ts`'s `TITLE_CARD`/`PAGES[].text` +
 `.secondaryText`, combined into one narration clip per page. Re-run the
 script after any text change in `book.ts` (update the manifest first).
 
-**The `zh` clips here now are scratch narration** from the free macOS voice
-(`node tools/make-scratch-audio.mjs`), for checking pacing while the story is laid
-out. `generate-audio.mjs` overwrites them with the Gemini voice, which costs money.
+The scratch macOS-voice `zh` clips used while laying the story out
+(`node tools/make-scratch-audio.mjs`) have been replaced by the Gemini voice.
 
 Voice plan (PRD §4.3, §9): current voice is the Gemini prebuilt "Sulafat" for
 both languages — plain-but-warm TTS, good enough to ship and playtest with.
