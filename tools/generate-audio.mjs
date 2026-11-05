@@ -90,8 +90,8 @@ async function listModels(key) {
 
 async function pcmToMp3(pcmBase64, sampleRate, outFile) {
   const pcmFile = `${outFile}.pcm`;
-  await writeFile(pcmFile, Buffer.from(pcmBase64, "base64"));
   await mkdir(dirname(outFile), { recursive: true });
+  await writeFile(pcmFile, Buffer.from(pcmBase64, "base64"));
   try {
     await run("ffmpeg", [
       "-y", "-loglevel", "error",

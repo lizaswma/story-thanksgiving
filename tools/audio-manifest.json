@@ -10,10 +10,11 @@
     { "id": "06", "zh": "谢谢公公陪我种花！绿叶子，四片！", "en": "Thank you, Grandpa, for gardening with me! A green leaf. Four!" },
     { "id": "07", "zh": "叮咚！小猫来了！", "en": "Ding-dong! Mr. Cat is here!" },
     { "id": "08", "zh": "谢谢小猫做我朋友！棕叶子，五片！", "en": "Thank you, Mr. Cat, for being my friend! A brown leaf. Five!" },
-    { "id": "09", "zh": "大家说：谢谢小兔！金叶子，六片！", "en": "Everyone says: Thank you, Little Rabbit! A golden leaf. Six!" },
-    { "id": "10", "zh": "数一数树叶。", "en": "Let's count the leaves." },
-    { "id": "11", "zh": "一家人吃大餐！", "en": "Time for the big dinner!" },
-    { "id": "12", "zh": "感恩节快乐，晚安！", "en": "Happy Thanksgiving. Good night!" }
+    { "id": "09", "zh": "谢谢熊阿姨带我去公园！紫叶子，六片！", "en": "Thank you, Ms. Bear, for taking me to the park! A purple leaf. Six!" },
+    { "id": "10", "zh": "大家说：谢谢小兔！金叶子，七片！", "en": "Everyone says: Thank you, Little Rabbit! A golden leaf. Seven!" },
+    { "id": "11", "zh": "数一数树叶。", "en": "Let's count the leaves." },
+    { "id": "12", "zh": "一家人吃大餐！", "en": "Time for the big dinner!" },
+    { "id": "13", "zh": "感恩节快乐，晚安！", "en": "Happy Thanksgiving. Good night!" }
   ],
   "count": [
     { "id": "1", "zh": "一", "en": "one" },
@@ -21,6 +22,7 @@
     { "id": "3", "zh": "三", "en": "three" },
     { "id": "4", "zh": "四", "en": "four" },
     { "id": "5", "zh": "五", "en": "five" },
-    { "id": "6", "zh": "六", "en": "six" }
+    { "id": "6", "zh": "六", "en": "six" },
+    { "id": "7", "zh": "七", "en": "seven" }
   ]
 }

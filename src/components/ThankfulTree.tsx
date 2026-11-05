@@ -3,15 +3,16 @@ import type { Tree } from "../types";
 import { LEAVES, leafSrc } from "../book";
 
 // Where each leaf sits on the tree, as % of the tree's area (PRD §9.4). Index
-// matches LEAVES: five colored leaves spread over the branches, the golden one
-// at the top. Nudge these once the real bare-tree art exists.
+// matches LEAVES: six colored leaves spread over the branches, the golden one
+// at the top. Fitted to the real thank-you tree (pages 3–10).
 const SLOTS = [
   { x: 22, y: 40 },
   { x: 76, y: 36 },
   { x: 32, y: 18 },
   { x: 66, y: 14 },
   { x: 50, y: 46 },
-  { x: 50, y: 2 },
+  { x: 7, y: 43 },
+  { x: 50, y: 11 },
 ];
 
 /** A leaf's slot on the stage, in % of the stage. */
@@ -60,22 +61,22 @@ function Leaf({
 /**
  * The thankful tree's leaves, composited over the page art (PRD §5: leaves
  * carry over page to page). `shown` leaves sit in their slots; `flying`, if
- * set, is the one arcing in from `from` right now; the first `counted` leaves
- * light up with a numeral (page 10).
+ * set, is the one arcing in from `from` right now; the leaves in `countOrder`
+ * light up with their numeral, 1 for the first one tapped (page 11).
  */
 export function ThankfulTree({
   tree,
   shown,
   flying,
   from,
-  counted = 0,
+  countOrder = [],
   glowing = false,
 }: {
   tree: Tree;
   shown: number;
   flying?: number;
   from?: { x: number; y: number };
-  counted?: number;
+  countOrder?: number[];
   glowing?: boolean;
 }) {
   return (
@@ -101,13 +102,14 @@ export function ThankfulTree({
               "--my": `${Math.min(from.y, at.y) - 12}%`,
             } as CSSProperties)
           : { ...size, left: `${at.x}%`, top: `${at.y}%` };
+        const num = countOrder.indexOf(i) + 1; // 0 = not counted yet
         return (
           <Leaf
             key={i}
             i={i}
             style={style}
-            className={`${isFlying ? "is-flying" : ""} ${i < counted ? "is-counted" : ""}`}
-            num={i < counted ? i + 1 : undefined}
+            className={`${isFlying ? "is-flying" : ""} ${num ? "is-counted" : ""}`}
+            num={num || undefined}
           />
         );
       })}

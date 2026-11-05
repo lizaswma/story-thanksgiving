@@ -1,6 +1,6 @@
 # 小兔过感恩节 (Little Rabbit's Thanksgiving) — PRD
 
-**Status:** M0 scaffolded (2026-09-25) — placeholder art, no audio yet
+**Status:** M1 in progress (2026-11-02) — vector layout art, all SFX, scratch `zh` narration (free macOS voice); no paid models used yet
 **Product:** Interactive storybook web app, book #3 in the 「小兔」 holiday series (after [小兔过万圣节](../story-halloween/PRD.md) and [小兔过中秋节](../story-mooncakes/PRD.md))
 **Primary user:** A 2–3 year old, co-playing with a parent
 **Author/owner:** liza@mamabuilds.dev
@@ -12,17 +12,17 @@
 A cozy, tappable bedtime storybook about **saying thank you**. 妈妈 hangs a bare paper
 "thankful tree" (感恩树) on the wall and brings a basket of colorful paper leaves. The
 rule is simple: *say thank you, add a leaf.* 小兔 thanks each person in her life for one
-thing they do with her — 妈妈, 爸爸, 婆婆, 公公, and her friend 小猫 — and each
+thing they do with her — 妈妈, 爸爸, 婆婆, 公公, her friend 小猫, and 熊阿姨 — and each
 thank-you sends a leaf of a new color up onto the tree. Then the family turns it around
-and thanks 小兔, adding a golden leaf at the top. They count the six leaves, sit down
+and thanks 小兔, adding a golden leaf at the top. They count the seven leaves, sit down
 to a big Thanksgiving dinner, and say good night.
 
 Where book 1 was about *collecting* (count up to 6) and book 2 about *sharing* (count
 down 4→1), this book is about **gratitude**: one repeatable, predictable pattern
-(thank → leaf → reaction) that teaches **colors and counting up 1→6** through an act a
+(thank → leaf → reaction) that teaches **colors and counting up 1→7** through an act a
 toddler can actually do themselves — saying 谢谢.
 
-The golden-leaf twist on page 9 carries the emotional point for the parent: kindness
+The golden-leaf twist on page 10 carries the emotional point for the parent: kindness
 comes back to you.
 
 The story is **told in Mandarin by default**, with a **parent-controlled toggle to
@@ -92,16 +92,17 @@ read-aloud script (not only a numeral badge):
 | 5 | 黄叶子，三片！ | A yellow leaf. Three! |
 | 6 | 绿叶子，四片！ | A green leaf. Four! |
 | 8 | 棕叶子，五片！ | A brown leaf. Five! |
-| 9 | 金叶子，六片！ | A golden leaf. Six! |
+| 9 | 紫叶子，六片！ | A purple leaf. Six! |
+| 10 | 金叶子，七片！ | A golden leaf. Seven! |
 
 Page 2's line states the book's one rule, so the pattern is explicit before it starts.
 
 ## 5. Story structure (page-by-page)
 
-12 pages + title card — same shape as books 1–2.
+13 pages + title card — one more than books 1–2, for the 熊阿姨 page.
 
 **Title card:** 「小兔」系列 / The Little Rabbit Series — **小兔过感恩节 · Little
-Rabbit's Thanksgiving** — 小兔 in her orange scarf beside a full, six-leaf thankful
+Rabbit's Thanksgiving** — 小兔 in her orange scarf beside a full, seven-leaf thankful
 tree. Start: 开始 / Start.
 
 | # | Beat | 中文 (4–8 字) | English | Tap interaction | SFX |
@@ -114,19 +115,20 @@ tree. Start: 开始 / Start.
 | 6 | Thank 公公 | 谢谢公公陪我种花！ | Thank you, Grandpa, for gardening with me! | Green leaf → tree, badge **4**; the flower in 公公's pot pops into bloom and he tips his cap | leaf boop |
 | 7 | Doorbell | 叮咚！小猫来了！ | Ding-dong! Mr. Cat is here! | Tap door → opens, 小猫 standing there holding a pumpkin pie (callback to his book-1 doorway) | doorbell + warm creak |
 | 8 | Thank 小猫 | 谢谢小猫做我朋友！ | Thank you, Mr. Cat, for being my friend! | Brown leaf → tree, badge **5**; 小猫's tail swishes | leaf boop + purr |
-| 9 | The twist | 大家说：谢谢小兔！ | Everyone says: Thank you, Little Rabbit! | 小兔's paws are empty. Tap the treetop → the family adds a big **golden leaf** for her, badge **6**; 小兔 goes shy-happy | magical twinkle |
-| 10 | Count | 数一数树叶。 | Let's count the leaves. | Tap each leaf (×6) → it lights up, voice counts 一…六 / one…six, numeral appears | gentle count blips |
-| 11 | Dinner | 一家人吃大餐！ | Time for the big dinner! | Tap table → dishes steam, everyone settles in: turkey, 婆婆's dumplings, 小猫's pie, 公公's flower in a vase as centerpiece | happy clink |
-| 12 | Bedtime | 感恩节快乐，晚安！ | Happy Thanksgiving. Good night! | Tap lamp → room dims, the tree glows softly, 小兔 curls up asleep | lullaby sting |
+| 9 | Thank 熊阿姨 | 谢谢熊阿姨带我去公园！ | Thank you, Ms. Bear, for taking me to the park! | Purple leaf → tree, badge **6**; 熊阿姨 (from book 1, holding a kite, park ball beside her) waves both paws, her book-1 pose | leaf boop |
+| 10 | The twist | 大家说：谢谢小兔！ | Everyone says: Thank you, Little Rabbit! | 小兔's paws are empty. Tap anywhere (小兔, the group or the tree) → everyone adds a big **golden leaf** for her, badge **7**; 小兔 goes shy-happy | magical twinkle |
+| 11 | Count | 数一数树叶。 | Let's count the leaves. | Tap each leaf (×7) → it lights up, voice counts 一…七 / one…seven, numeral appears | gentle count blips |
+| 12 | Dinner | 一家人吃大餐！ | Time for the big dinner! | Tap table → dishes steam, everyone settles in: turkey, 婆婆's dumplings, 小猫's pie, 公公's flower in a vase as centerpiece | happy clink |
+| 13 | Bedtime | 感恩节快乐，晚安！ | Happy Thanksgiving. Good night! | Tap lamp → room dims, the tree glows softly, 小兔 curls up asleep | lullaby sting |
 
 Leaves carry over between pages the way book 1's stickers carry over on the bag: every
 page after page 3 shows the tree with all leaves added so far.
 
 ## 6. Staging the thank-you pages
 
-Pages 3, 4, 5, 6, and 8 share **one fixed composition**. Only the person being thanked
+Pages 3, 4, 5, 6, 8, and 9 share **one fixed composition**. Only the person being thanked
 changes. This makes the pattern predictable for the child and lets one background plate
-serve all five pages.
+serve all six pages.
 
 ```
 ┌──────────────────────────────────────────┐
@@ -145,7 +147,7 @@ serve all five pages.
 - **小兔 centre**, facing right toward the person, holding up that page's leaf.
   Expression: *calm* before the tap, *shy/happy* after (locked `expressions.png`).
 - **The person right**, and **only** that person — the others are off-page until
-  page 9. The child always knows who "谢谢___" is for.
+  page 10. The child always knows who "谢谢___" is for.
 - **Eye-line:** 小兔 and the person look at each other.
 - **Leaf path:** a gentle arc from 小兔's paws, over her head, to the tree — never
   crossing in front of the person's face.
@@ -165,13 +167,14 @@ Each person holds the prop that shows *why* they're thanked; the tap reaction re
 | 5 · 婆婆 · food | In an apron, holding a steaming bowl of dumplings | Lifts the bowl a little, steam puff, warm smile | apron + bowl pose |
 | 6 · 公公 · gardening | Beside a flower pot (closed bud) with a tiny watering can, cap on, cane | Flower **pops into bloom**, he tips his cap | gardening pose, pot (bud/bloom), watering can |
 | 8 · 小猫 · friend | Just inside the door, holding the pie from page 7 | Tail swish | pie-holding pose (shared with page 7) |
+| 9 · 熊阿姨 · park | Holding a kite, park ball beside her | Waves both paws (book 1 `bear-wave` pose) | kite pose, kite + ball props; locked reference: `character/cast/bear.png` |
 
-### 6.2 Page 9 breaks the layout — on purpose
+### 6.2 Page 10 breaks the layout — on purpose
 
-The first time the fixed composition changes: **all five** (妈妈, 爸爸, 婆婆, 公公, 小猫)
+The first time the fixed composition changes: **all six** (妈妈, 爸爸, 婆婆, 公公, 小猫, 熊阿姨)
 stand together on the right, 小兔 centre with empty paws, tree left. Because every prior
 page showed exactly one person, the whole group appearing at once is the visual cue that
-something is different. The golden leaf is noticeably larger than the five colored ones
+something is different. The golden leaf is noticeably larger than the six colored ones
 and sits at the top of the tree.
 
 ## 7. Interactivity model
@@ -189,16 +192,16 @@ reaction layer but no collection. A thank-you tap does both — a leaf joins the
     /**
      * A thank-you: one leaf flies from 小兔's paws onto the tree (like `stick`
      * onto book 1's bag) AND the frame swaps to the person's reaction (like
-     * `swap`). Pages 3, 4, 5, 6, 8, 9.
+     * `swap`). Pages 3, 4, 5, 6, 8, 9, 10.
      */
     kind: "thank";
     sfx: string;
     hotspot: Hotspot;
     /** Reaction layer shown after the tap (person's "after" pose). */
     to: string;
-    /** Tree total AFTER this tap — 1..6. Picks the leaf (LEAVES[total-1]) and drives the badge. */
+    /** Tree total AFTER this tap — 1..7. Picks the leaf (LEAVES[total-1]) and drives the badge. */
     total: number;
-    /** Where the leaf starts its flight. Defaults to the hotspot centre (page 9: the family). */
+    /** Where the leaf starts its flight. Defaults to the hotspot centre (page 10: the group). */
     leafFrom?: { x: number; y: number };
     /** Speak the number and show a numeral badge. */
     counting?: boolean;
@@ -210,35 +213,36 @@ glowOnOpen? }` gives the tree's box on that page's art and how many leaves are
 already on it. Leaves are composited in code from `/public/leaves/<color>.webp`
 (`src/components/ThankfulTree.tsx`), so every plate draws the tree bare.
 
-Page 10 (count) is a plain `stick` with `counting: true`; on a page with a `tree`, each
-tap lights up the next leaf and puts its numeral under it. Pages 1, 2, 7, 11, 12 are `swap`.
+Page 11 (count) is a plain `stick` with `counting: true`; on a page with a `tree`, each
+tap lights up the next leaf and puts its numeral under it. Pages 1, 2, 7, 12, 13 are `swap`.
 
 ### 7.1 Secondary taps (easter eggs)
 
 Same `ExtraTap` pattern as books 1–2: never required, always pleasant, repeatable.
 Book 2's recurring moon becomes this book's recurring **falling leaves**: a
 `window-leaves` extra on every page with a window in frame, as a quiet through-line.
-**Not** on page 9 (protect the golden-leaf reveal) or page 10 (keep counting taps
+**Not** on page 10 (protect the golden-leaf reveal) or page 11 (keep counting taps
 unambiguous).
 
 | # | Extras (flash / sfx) — *proposed, confirm against real art* |
 |---|---|
 | 1 | *(window is the main interaction)* · `door-wreath` / jingle |
-| 2 | `window-leaves` / wind chime · `rug-wiggle` / soft whump |
+| 2 | `window-leaves` / wind chime (no rug tap: the rug sits under the caption) |
 | 3 | `window-leaves` / wind chime |
 | 4 | `bike-bell` / ring-ring |
 | 5 | `window-leaves` / wind chime · `steam-puff` / soft hiss |
 | 6 | `watering-can` / trickle |
 | 7 | `window-leaves` / wind chime |
 | 8 | `pie-steam` / soft hiss |
-| 9 | *(none — protect the golden leaf)* |
-| 10 | *(none — counting)* |
-| 11 | `window-leaves` / wind chime · `candle-flare` / flare |
-| 12 | `window-leaves` / wind chime (last appearance) · `blanket-wiggle` / soft whump |
+| 9 | `window-leaves` / wind chime · `park-ball` / boing |
+| 10 | *(none — protect the golden leaf)* |
+| 11 | *(none — counting)* |
+| 12 | `window-leaves` / wind chime · `candle-flare` / flare |
+| 13 | `window-leaves` / wind chime (last appearance) · `blanket-wiggle` / soft whump |
 
 ### 7.2 Rules carried over
 
-One interactive element per page (page 10's ×6 counting taps count as one). Tap
+One interactive element per page (page 11's ×7 counting taps count as one). Tap
 targets ≥120pt. Every tap does something pleasant, nothing is ever "incomplete."
 Interactions are not gates. `prefers-reduced-motion` honored throughout (leaf arc
 becomes a cross-fade onto the tree).
@@ -262,7 +266,7 @@ any smile.
 
 ### 9.2 New costume (series pack)
 
-- **`character/costumes/scarf.png`** — a small knit scarf in warm orange (reuse the
+- **`character/costumes/scarf.png`** (locked 2026-11-02) — a small knit scarf in warm orange (reuse the
   `pumpkin` `#EE9C53` token, `pumpkinShadow` for the knit shading — flat, no rendered
   texture), wrapped once around the neck line with a short tail. Face, both ears, arms,
   and feet stay fully visible. Worn on every page. Added to the style pack (series
@@ -275,25 +279,26 @@ any smile.
 - 婆婆 in an apron holding a bowl of dumplings
 - 公公 gardening beside a flower pot, watering can nearby
 - 小猫 holding a pumpkin pie (pages 7, 8)
+- 熊阿姨 holding a kite (page 9)
 - 小兔 holding up a leaf (base pose, recolor/re-prop per page)
-- Page 9 group: all five on the right, 小兔 centre
-- Page 11 group: family + 小猫 around the dinner table
-- 小兔 curled asleep with scarf (page 12)
+- Page 10 group: all six on the right, 小兔 centre
+- Page 12 group: family, 小猫 + 熊阿姨 around the dinner table
+- 小兔 curled asleep with scarf (page 13)
 
 ### 9.4 New props
 
-- **Thankful tree** — bare paper tree on the wall; leaves composited in code (0–6),
+- **Thankful tree** — bare paper tree on the wall; leaves composited in code (0–7),
   same approach as book 1's sticker bag
-- **Leaves** — red, orange, yellow, green, brown (same size), golden (larger)
+- **Leaves** — red, orange, yellow, green, brown, purple (same size), golden (larger)
 - **Leaf basket** — empty-looking and full states
 - **Small bike**, **helmet**, **picture book**, **dumpling bowl**, **flower pot** (bud +
-  bloom), **watering can**, **pumpkin pie**
+  bloom), **watering can**, **pumpkin pie**, **kite**, **park ball**
 - **Dinner table** — turkey, dumplings, pie, 公公's flower in a vase
 
 ### 9.5 Scene moods & specs
 
-Almost entirely **cozy interior** (§4 of the style bible); page 12 is **bedtime**. One
-background plate serves pages 3–6 and 8. Same export specs as books 1–2 (2048px long
+Almost entirely **cozy interior** (§4 of the style bible); page 13 is **bedtime**. One
+background plate serves pages 3–6, 8 and 9. Same export specs as books 1–2 (2048px long
 edge, 16:10 plates, PNG with alpha for layers, WebP for backgrounds) and the same
 `public/pages/NN/`, `public/audio/{lang}/`, `public/sfx/` layout, plus
 `public/leaves/`.
@@ -308,21 +313,21 @@ warm autumn range and be clearly distinguishable from each other at iPad half-fr
    kitchen-helper concepts. Deliberately not a food-sharing story, to stay distinct
    from book 2.
 2. **Who and why:** 妈妈 — reading to me · 爸爸 — biking with me · 婆婆 — yummy food ·
-   公公 — gardening with me · 小猫 — being my friend. Taken from the child's real
+   公公 — gardening with me · 小猫 — being my friend · 熊阿姨 — taking me to the park. Taken from the child's real
    relationships.
-3. **Golden-leaf twist:** kept. The family thanks 小兔 back on page 9, so the count
-   ends at **6** — the same total as book 1.
-4. **Math:** count up 1→6 with color names, one leaf per page, cumulative on the tree.
+3. **Golden-leaf twist:** kept. Everyone thanks 小兔 back on page 10, so the count
+   ends at **7**.
+4. **Math:** count up 1→7 with color names, one leaf per page, cumulative on the tree.
 5. **Dinner:** turkey **plus** Chinese dishes (婆婆's dumplings), 小猫's pumpkin pie,
    and 公公's flower as the centerpiece — each earlier thank-you reappears at the table.
 6. **Costume:** small orange autumn scarf, worn throughout; added to the series pack.
 7. **Staging:** one fixed composition for all thank-you pages (tree left, 小兔 centre,
-   one person right), broken on purpose for the page 9 group reveal.
-8. **Page count:** 12 + title card, matching books 1–2.
+   one person right), broken on purpose for the page 10 group reveal.
+8. **Page count:** 13 + title card; the 熊阿姨 page was added on top of the 12 used in books 1–2.
 
 ## 11. Open questions
 
-- **Leaf shape:** simple maple leaves for all six, or maple for the five and a heart-
+- **Leaf shape:** simple maple leaves for all seven, or maple for the six and a heart-
   shaped golden leaf for 小兔? (Heart reads "love" to a parent; may be less legible as
   "a leaf" to a toddler.) Decide once candidates exist.
 - **Page 3 reaction:** 妈妈's open-arms pose is the cheap locked option; an actual hug
@@ -343,13 +348,13 @@ analytics, native packaging, printing/PDF export. Also:
 
 | # | Deliverable |
 |---|---|
-| M0 | Scaffold: copy the `story-mooncakes` app shell; swap in this book's 12-page + title data |
-| M1 | Full content in Mandarin: all 12 pages, `zh` text, `zh` narration (plain TTS), all SFX, the new `thank` kind + tree carry-over working with placeholder art |
-| M2 | Real art: scarf costume locked in the style pack; tree + leaves; new poses and props; page 9 group; dinner table → layered exports wired in, hotspots measured against real art |
+| M0 | Scaffold: copy the `story-mooncakes` app shell; swap in this book's page + title data |
+| M1 | Full content in Mandarin: all 13 pages, `zh` text, `zh` narration (scratch macOS voice), all SFX, the new `thank` kind + tree carry-over working with placeholder art |
+| M2 | Real art: scarf costume locked in the style pack; tree + leaves; new poses and props; page 10 group; dinner table → layered exports wired in, hotspots measured against real art |
 | M3 | Bilingual: `en` text + `en` narration + toggle, in-place language switch, persistence |
 | M4 | Final voices: regenerate `zh` + `en` narration with the series' LLM voices |
 | M5 | PWA polish: offline precache, install-to-home-screen, landscape lock, reduced-motion, mute, restart, title card |
-| M6 | Playtest with the toddler; tune leaf colors, the page 9 twist, pacing so the child can say 谢谢 along |
+| M6 | Playtest with the toddler; tune leaf colors, the page 10 twist, pacing so the child can say 谢谢 along |
 
 ## 14. Success criteria
 
